@@ -1,0 +1,9 @@
+﻿<Project>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageVersion Include="SonarAnalyzer.CSharp" Version="10.32.0.713" />
+		<PackageVersion Include="Bogus" Version="35.6.5" />
+	</ItemGroup>
+</Project>
