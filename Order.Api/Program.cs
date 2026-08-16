@@ -22,7 +22,6 @@ var orderFaker = new Faker<Order>()
 
         return new Faker<OrderItem>()
             .RuleFor(i => i.ProductId, f => f.Random.Int(1, 20))
-            .RuleFor(i => i.ProductName, f => f.Commerce.ProductName())
             .RuleFor(i => i.Quantity, f => f.Random.Int(1, 5))
             .RuleFor(i => i.UnitPrice, f =>
                 decimal.Parse(f.Commerce.Price(10, 500)))
