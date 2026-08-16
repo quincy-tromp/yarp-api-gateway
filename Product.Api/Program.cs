@@ -17,7 +17,7 @@ var products = new Faker<Product>()
 
 app.MapGet("/products", () =>
 {
-    return Results.Ok(new { products });
+    return Results.Ok(new { Items = products });
 });
 
 app.MapGet("/products/{id:int}", (int id) =>
