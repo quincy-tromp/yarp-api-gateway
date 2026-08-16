@@ -6,4 +6,5 @@
   </Folder>
   <Project Path="Order.Api/Orders.Api.csproj" />
   <Project Path="Product.Api/Products.Api.csproj" />
+  <Project Path="Yarp.Gateway/Yarp.Gateway.csproj" Id="af9e2e09-8bbe-4b64-8824-8699fc959c37" />
 </Solution>
