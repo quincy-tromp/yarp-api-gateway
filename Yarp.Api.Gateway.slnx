@@ -5,6 +5,7 @@
     <File Path="Directory.Packages.props" />
   </Folder>
   <Project Path="Order.Api/Orders.Api.csproj" />
+  <Project Path="Overview.Bff/Overview.Bff.csproj" Id="40bafdca-1a1f-4cd2-83c2-18ca53359900" />
   <Project Path="Product.Api/Products.Api.csproj" />
   <Project Path="Yarp.Gateway/Yarp.Gateway.csproj" Id="af9e2e09-8bbe-4b64-8824-8699fc959c37" />
 </Solution>
