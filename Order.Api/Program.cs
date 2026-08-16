@@ -35,7 +35,7 @@ var orders = orderFaker.Generate(20);
 
 app.MapGet("/orders", () =>
 {
-    return Results.Ok(orders);
+    return Results.Ok(new { orders });
 });
 
 app.MapGet("/orders/{id:int}", (int id) =>
