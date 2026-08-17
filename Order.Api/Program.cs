@@ -3,6 +3,8 @@ using Orders.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -48,5 +50,7 @@ app.MapGet("/orders/{id:int}", (int id) =>
         })
         : Results.Ok(order);
 });
+
+app.MapHealthChecks("/health");
 
 await app.RunAsync();

@@ -3,6 +3,8 @@ using Products.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -47,5 +49,7 @@ app.MapGet("/products/{id:int}", (int id) =>
         })
         : Results.Ok(product);
 });
+
+app.MapHealthChecks("/health");
 
 await app.RunAsync();

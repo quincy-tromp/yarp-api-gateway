@@ -20,6 +20,8 @@ builder.Services.AddRefitClient<IOrderApi>()
         c.BaseAddress = new Uri(apiBaseUrl);
     });
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -80,5 +82,7 @@ app.MapGet("/overview", async (IProductApi productApi, IOrderApi orderApi) =>
     return Results.Ok(result);
 
 }).Produces<ProductOrderOverview>();
+
+app.MapHealthChecks("/health");
 
 await app.RunAsync();
