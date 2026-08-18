@@ -1,13 +1,23 @@
 using Bogus;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using Orders.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHealthChecks();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 var orderFaker = new Faker<Order>()
     .RuleFor(o => o.Id, f => f.IndexFaker + 1)
@@ -37,7 +47,7 @@ var orders = orderFaker.Generate(20);
 app.MapGet("/orders", () =>
 {
     return Results.Ok(new { Items = orders });
-});
+}).RequireScope("Orders.Read");
 
 app.MapGet("/orders/{id:int}", (int id) =>
 {
@@ -49,7 +59,7 @@ app.MapGet("/orders/{id:int}", (int id) =>
             message = $"Order with id {id} was not found."
         })
         : Results.Ok(order);
-});
+}).RequireScope("Orders.Read");
 
 app.MapHealthChecks("/health");
 

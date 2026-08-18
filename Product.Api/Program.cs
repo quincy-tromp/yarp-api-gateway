@@ -1,13 +1,23 @@
 using Bogus;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using Products.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHealthChecks();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 var products = new Faker<Product>()
     .RuleFor(p => p.Id, f => f.IndexFaker + 1)
@@ -36,7 +46,7 @@ app.MapGet("/products", (string? ids) =>
         .ToList();
 
     return Results.Ok(new { Items = results });
-});
+}).RequireScope("Products.Read");
 
 app.MapGet("/products/{id:int}", (int id) =>
 {
@@ -48,7 +58,7 @@ app.MapGet("/products/{id:int}", (int id) =>
             message = $"Product with id {id} was not found."
         })
         : Results.Ok(product);
-});
+}).RequireScope("Products.Read");
 
 app.MapHealthChecks("/health");
 

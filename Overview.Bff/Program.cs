@@ -1,9 +1,13 @@
 using System.Collections.Immutable;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using Overview.Bff.Clients;
 using Overview.Bff.Models;
 using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHealthChecks();
 
 builder.Services.AddRefitClient<IProductApi>()
     .ConfigureHttpClient(c =>
@@ -20,11 +24,17 @@ builder.Services.AddRefitClient<IOrderApi>()
         c.BaseAddress = new Uri(apiBaseUrl);
     });
 
-builder.Services.AddHealthChecks();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/overview", async (IProductApi productApi, IOrderApi orderApi) =>
 {
@@ -81,7 +91,8 @@ app.MapGet("/overview", async (IProductApi productApi, IOrderApi orderApi) =>
 
     return Results.Ok(result);
 
-}).Produces<ProductOrderOverview>();
+}).Produces<ProductOrderOverview>()
+    .RequireScope("Overview.Read");
 
 app.MapHealthChecks("/health");
 
