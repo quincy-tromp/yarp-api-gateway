@@ -46,7 +46,8 @@ app.MapGet("/products", (string? ids) =>
         .ToList();
 
     return Results.Ok(new { Items = results });
-}).RequireScope("Products.Read");
+}).RequireAuthorization()
+.RequireScope("Products.Read");
 
 app.MapGet("/products/{id:int}", (int id) =>
 {
@@ -58,7 +59,8 @@ app.MapGet("/products/{id:int}", (int id) =>
             message = $"Product with id {id} was not found."
         })
         : Results.Ok(product);
-}).RequireScope("Products.Read");
+}).RequireAuthorization()
+.RequireScope("Products.Read");
 
 app.MapHealthChecks("/health");
 

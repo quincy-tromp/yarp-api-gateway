@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web;
 using Overview.Bff.Clients;
 using Overview.Bff.Models;
@@ -15,17 +16,33 @@ builder.Services.AddRefitClient<IProductApi>()
         var apiBaseUrl = builder.Configuration.GetValue(
             "ExternalApis:Products:BaseUrl", "https://localhost:5001");
         c.BaseAddress = new Uri(apiBaseUrl);
-    });
+    }).AddHttpMessageHandler(sp => new MicrosoftIdentityMessageHandler(
+        sp.GetRequiredService<IAuthorizationHeaderProvider>(),
+        new MicrosoftIdentityMessageHandlerOptions
+        {
+            Scopes = builder.Configuration
+                .GetSection("ExternalApis:Products:Scopes")
+                .Get<string[]>()!
+        }));
 builder.Services.AddRefitClient<IOrderApi>()
     .ConfigureHttpClient(c =>
     {
         var apiBaseUrl = builder.Configuration.GetValue(
             "ExternalApis:Orders:BaseUrl", "https://localhost:6001");
         c.BaseAddress = new Uri(apiBaseUrl);
-    });
+    }).AddHttpMessageHandler(sp => new MicrosoftIdentityMessageHandler(
+        sp.GetRequiredService<IAuthorizationHeaderProvider>(),
+        new MicrosoftIdentityMessageHandlerOptions
+        {
+            Scopes = builder.Configuration
+                .GetSection("ExternalApis:Orders:Scopes")
+                .Get<string[]>()!
+        }));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"))
+    .EnableTokenAcquisitionToCallDownstreamApi()
+    .AddInMemoryTokenCaches();
 
 builder.Services.AddAuthorization();
 
@@ -92,6 +109,7 @@ app.MapGet("/overview", async (IProductApi productApi, IOrderApi orderApi) =>
     return Results.Ok(result);
 
 }).Produces<ProductOrderOverview>()
+    .RequireAuthorization()
     .RequireScope("Overview.Read");
 
 app.MapHealthChecks("/health");

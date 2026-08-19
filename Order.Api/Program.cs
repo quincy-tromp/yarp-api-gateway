@@ -47,7 +47,8 @@ var orders = orderFaker.Generate(20);
 app.MapGet("/orders", () =>
 {
     return Results.Ok(new { Items = orders });
-}).RequireScope("Orders.Read");
+}).RequireAuthorization()
+.RequireScope("Orders.Read");
 
 app.MapGet("/orders/{id:int}", (int id) =>
 {
@@ -59,7 +60,8 @@ app.MapGet("/orders/{id:int}", (int id) =>
             message = $"Order with id {id} was not found."
         })
         : Results.Ok(order);
-}).RequireScope("Orders.Read");
+}).RequireAuthorization()
+.RequireScope("Orders.Read");
 
 app.MapHealthChecks("/health");
 
