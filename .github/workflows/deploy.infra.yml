@@ -33,6 +33,13 @@ jobs:
 
             - name: Deploy bicep template
               uses: azure/bicep-deploy@v2
+              env:
+                PRODUCT_API_CLIENT_ID: ${{ secrets.PRODUCT_API_CLIENT_ID }}
+                ORDER_API_CLIENT_ID: ${{ secrets.ORDER_API_CLIENT_ID }}
+                OVERVIEW_BFF_CLIENT_ID: ${{ secrets.OVERVIEW_BFF_CLIENT_ID }}
+                OVERVIEW_BFF_CLIENT_SECRET: ${{ secrets.OVERVIEW_BFF_CLIENT_SECRET }}
+                JWT_AUTHORITY: ${{ secrets.JWT_AUTHORITY }}
+                JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
               with:
                   type: deployment
                   operation: create          
