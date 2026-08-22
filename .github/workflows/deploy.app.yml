@@ -1,0 +1,76 @@
+name: Deploy .NET Apps
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - ".github/workflows/deploy.app.yml"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  DOTNET_VERSION: "10.0.x"
+
+jobs:
+  build-and-deploy:
+    name: Deploy ${{ matrix.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - name: product-api
+            project: src/Product.Api/Products.Api.csproj
+            app-name: product-api-site
+
+          - name: order-api
+            project: src/Order.Api/Orders.Api.csproj
+            app-name: order-web-site
+
+          - name: overview-bff
+            project: src/Overview.Bff/Overview.Bff.csproj
+            app-name: overview-bff-site
+
+          - name: yarp-gateway
+            project: src/Yarp.Gateway/Yarp.Gateway.csproj
+            app-name: yarp-proxy-site
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore "${{ matrix.project }}"
+
+      - name: Build and publish
+        run: |
+          dotnet publish "${{ matrix.project }}" \
+            --configuration Release \
+            --no-restore \
+            --output "${{ github.workspace }}/publish/${{ matrix.name }}"
+
+      - name: Login to Azure
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ matrix.app-name }}
+          package: "${{ github.workspace }}/publish/${{ matrix.name }}"
+
+      - name: Logout from Azure
+        run: az logout
