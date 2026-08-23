@@ -5,7 +5,7 @@ param tenantId = 'f9041973-e228-45ce-8dbd-a51b4d7d3203'
 
 param appServicePlanName = 'yarp-app-service-plan'
 param productApiName = 'product-api-site'
-param orderApiName = 'order-web-site'
+param orderApiName = 'order-api-site'
 param overviewBffName = 'overview-bff-site'
 param yarpProxyName = 'yarp-proxy-site'
 
