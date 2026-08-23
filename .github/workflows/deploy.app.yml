@@ -30,7 +30,7 @@ jobs:
 
           - name: order-api
             project: src/Order.Api/Orders.Api.csproj
-            app-name: order-web-site
+            app-name: order-api-site
 
           - name: overview-bff
             project: src/Overview.Bff/Overview.Bff.csproj
