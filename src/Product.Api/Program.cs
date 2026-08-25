@@ -53,19 +53,6 @@ app.MapGet("/products", (string? ids) =>
 }).RequireAuthorization()
 .RequireScope("Products.Read");
 
-app.MapGet("/products/{id:int}", (int id) =>
-{
-    var product = products.FirstOrDefault(p => p.Id == id);
-
-    return product is null
-        ? Results.NotFound(new
-        {
-            message = $"Product with id {id} was not found."
-        })
-        : Results.Ok(product);
-}).RequireAuthorization()
-.RequireScope("Products.Read");
-
 app.MapHealthChecks("/health");
 
 await app.RunAsync();
