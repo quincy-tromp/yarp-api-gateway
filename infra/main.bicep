@@ -125,9 +125,6 @@ resource yarpProxy 'Microsoft.Web/sites@2022-09-01' = {
 resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   name: logWorkspaceName
   location: location
-  properties: {
-    retentionInDays: 5
-  }
 }
 
 resource yarpInsights 'Microsoft.Insights/components@2020-02-02' = {
