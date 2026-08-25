@@ -62,7 +62,7 @@ resource productApi 'Microsoft.Web/sites@2022-09-01' = {
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
     }
-  }
+  }  
 }
 
 resource orderApi 'Microsoft.Web/sites@2022-09-01' = {
@@ -127,16 +127,6 @@ resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   location: location
 }
 
-resource yarpInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: yarpAppInsightName
-  location: location
-  kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    WorkspaceResourceId: logWorkspace.id
-  }
-}
-
 resource productInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: productAppInsightName
   location: location
@@ -167,6 +157,36 @@ resource overviewInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
+resource yarpInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: yarpAppInsightName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: logWorkspace.id
+  }
+}
+
+resource productApiSiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
+  parent: productApi
+  name: 'Microsoft.ApplicationInsights.AzureWebSites'
+}
+
+resource orderApiSiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
+  parent: orderApi
+  name: 'Microsoft.ApplicationInsights.AzureWebSites'
+}
+
+resource overviewBffSiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
+  parent: overviewBff
+  name: 'Microsoft.ApplicationInsights.AzureWebSites'
+}
+
+resource yarpProxySiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
+  parent: yarpProxy
+  name: 'Microsoft.ApplicationInsights.AzureWebSites'
+}
+
 resource productApiAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
   parent: productApi
   name: 'appsettings'
@@ -174,6 +194,32 @@ resource productApiAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     AzureAd__TenantId: tenantId
     AzureAd__ClientId: productApiClientId
     APPLICATIONINSIGHTS_CONNECTION_STRING: productInsights.properties.ConnectionString
+    APPINSIGHTS_INSTRUMENTATIONKEY: productInsights.properties.InstrumentationKey
+    
+  }
+}
+
+resource productApiLogSettings 'Microsoft.Web/sites/config@2022-03-01' = {
+  parent: productApi
+  name: 'logs'
+  properties: {
+    applicationLogs: {
+      fileSystem: {
+        level: 'Warning'
+      }
+    }
+    httpLogs: {
+      fileSystem: {
+        retentionInMb: 40
+        enabled: true
+      }
+    }
+    failedRequestsTracing: {
+      enabled: true
+    }
+    detailedErrorMessages: {
+      enabled: true
+    }
   }
 }
 
@@ -184,6 +230,31 @@ resource orderApiAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     AzureAd__TenantId: tenantId
     AzureAd__ClientId: orderApiClientId
     APPLICATIONINSIGHTS_CONNECTION_STRING: orderInsights.properties.ConnectionString
+    APPINSIGHTS_INSTRUMENTATIONKEY: orderInsights.properties.InstrumentationKey
+  }
+}
+
+resource orderApiLogSettings 'Microsoft.Web/sites/config@2022-03-01' = {
+  parent: orderApi
+  name: 'logs'
+  properties: {
+    applicationLogs: {
+      fileSystem: {
+        level: 'Warning'
+      }
+    }
+    httpLogs: {
+      fileSystem: {
+        retentionInMb: 40
+        enabled: true
+      }
+    }
+    failedRequestsTracing: {
+      enabled: true
+    }
+    detailedErrorMessages: {
+      enabled: true
+    }
   }
 }
 
@@ -197,6 +268,31 @@ resource overviewBffAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     AzureAd__ClientId: overviewBffClientId
     AzureAd__ClientCredentials__0__ClientSecret: overviewBffClientSecret
     APPLICATIONINSIGHTS_CONNECTION_STRING: overviewInsights.properties.ConnectionString
+    APPINSIGHTS_INSTRUMENTATIONKEY: overviewInsights.properties.InstrumentationKey
+  }
+}
+
+resource overviewBffLogSettings 'Microsoft.Web/sites/config@2022-03-01' = {
+  parent: overviewBff
+  name: 'logs'
+  properties: {
+    applicationLogs: {
+      fileSystem: {
+        level: 'Warning'
+      }
+    }
+    httpLogs: {
+      fileSystem: {
+        retentionInMb: 40
+        enabled: true
+      }
+    }
+    failedRequestsTracing: {
+      enabled: true
+    }
+    detailedErrorMessages: {
+      enabled: true
+    }
   }
 }
 
@@ -213,5 +309,30 @@ resource yarpAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     ReverseProxy__Clusters__orders__Destinations__ordersapi__Address: 'https://${orderApi.name}.azurewebsites.net'
     ReverseProxy__Clusters__overview__Destinations__overviewbff__Address: 'https://${overviewBff.name}.azurewebsites.net'
     APPLICATIONINSIGHTS_CONNECTION_STRING: yarpInsights.properties.ConnectionString
+    APPINSIGHTS_INSTRUMENTATIONKEY: yarpInsights.properties.InstrumentationKey
+  }
+}
+
+resource yarpProxyLogSettings 'Microsoft.Web/sites/config@2022-03-01' = {
+  parent: yarpProxy
+  name: 'logs'
+  properties: {
+    applicationLogs: {
+      fileSystem: {
+        level: 'Warning'
+      }
+    }
+    httpLogs: {
+      fileSystem: {
+        retentionInMb: 40
+        enabled: true
+      }
+    }
+    failedRequestsTracing: {
+      enabled: true
+    }
+    detailedErrorMessages: {
+      enabled: true
+    }
   }
 }
