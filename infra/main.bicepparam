@@ -9,6 +9,12 @@ param orderApiName = 'order-api-site'
 param overviewBffName = 'overview-bff-site'
 param yarpProxyName = 'yarp-proxy-site'
 
+param logWorkspaceName = 'yarp-log-workspace'
+param yarpAppInsightName = 'yarp-insight'
+param productAppInsightName = 'product-insight'
+param orderAppInsightName = 'order-insight'
+param overviewAppInsightName = 'overview-insight'
+
 param productApiClientId = readEnvironmentVariable('PRODUCT_API_CLIENT_ID')
 param orderApiClientId = readEnvironmentVariable('ORDER_API_CLIENT_ID')
 param overviewBffClientId = readEnvironmentVariable('OVERVIEW_BFF_CLIENT_ID')
