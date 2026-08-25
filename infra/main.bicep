@@ -167,26 +167,6 @@ resource yarpInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-resource productApiSiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
-  parent: productApi
-  name: 'Microsoft.ApplicationInsights.AzureWebSites'
-}
-
-resource orderApiSiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
-  parent: orderApi
-  name: 'Microsoft.ApplicationInsights.AzureWebSites'
-}
-
-resource overviewBffSiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
-  parent: overviewBff
-  name: 'Microsoft.ApplicationInsights.AzureWebSites'
-}
-
-resource yarpProxySiteExtension 'Microsoft.Web/sites/siteextensions@2020-06-01' = {
-  parent: yarpProxy
-  name: 'Microsoft.ApplicationInsights.AzureWebSites'
-}
-
 resource productApiAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
   parent: productApi
   name: 'appsettings'
