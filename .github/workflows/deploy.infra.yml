@@ -42,6 +42,8 @@ jobs:
                 OVERVIEW_BFF_CLIENT_SECRET: ${{ secrets.OVERVIEW_BFF_CLIENT_SECRET }}
                 JWT_AUTHORITY: ${{ secrets.JWT_AUTHORITY }}
                 JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+                PRODUCT_API_SCOPE: ${{ secrets.PRODUCT_API_SCOPE }}
+                ORDER_API_SCOPE: ${{ secrets.ORDER_API_SCOPE }}
               with:
                   type: deployment
                   operation: create          

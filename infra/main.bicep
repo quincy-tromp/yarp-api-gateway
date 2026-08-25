@@ -31,6 +31,12 @@ param jwtAuthority string
 @secure()
 param jwtIssuer string
 
+@secure()
+param productsApiScope string
+
+@secure()
+param ordersApiScope string
+
 @description('Create the app service plan')
 resource servicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
@@ -247,6 +253,8 @@ resource overviewBffAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     AzureAd__TenantId: tenantId
     AzureAd__ClientId: overviewBffClientId
     AzureAd__ClientCredentials__0__ClientSecret: overviewBffClientSecret
+    ExternalApis__Products__Scopes__0: productsApiScope
+    ExternalApis__Orders__Scopes__0: ordersApiScope
     APPLICATIONINSIGHTS_CONNECTION_STRING: overviewInsights.properties.ConnectionString
     APPINSIGHTS_INSTRUMENTATIONKEY: overviewInsights.properties.InstrumentationKey
   }
