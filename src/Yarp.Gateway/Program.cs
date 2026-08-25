@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Yarp.Gateway;
@@ -55,6 +56,13 @@ builder.Services.AddCors(options =>
         policy.WithMethods("GET");
     });
 });
+
+builder.Services.AddOpenTelemetry()   
+    .UseAzureMonitor()
+    .WithTracing(tracing =>
+    {
+        tracing.AddSource("Yarp.ReverseProxy");
+    });
 
 var app = builder.Build();
 

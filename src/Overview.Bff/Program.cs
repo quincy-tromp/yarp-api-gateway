@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web;
@@ -45,6 +46,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddInMemoryTokenCaches();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddOpenTelemetry()
+    .UseAzureMonitor();
 
 var app = builder.Build();
 
