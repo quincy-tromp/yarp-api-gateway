@@ -127,9 +127,6 @@ resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   location: location
   properties: {
     retentionInDays: 5
-    sku: {
-      name: 'Free'
-    }
   }
 }
 
