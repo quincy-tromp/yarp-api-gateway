@@ -49,6 +49,8 @@ builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
     .DoCustomResponseTransformation();
 
+builder.Services.AddRequestTimeouts();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReadOnly", policy =>
