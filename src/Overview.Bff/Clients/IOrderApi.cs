@@ -6,5 +6,6 @@ namespace Overview.Bff.Clients;
 public interface IOrderApi
 {
     [Get("/orders")]
-    Task<CollectionResponse<Order>> GetOrdersAsync();
+    Task<CollectionResponse<Order>> GetOrdersAsync(
+        [Header("X-Internal-Gateway_key")] string internalGatewayKey);
 }

@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web;
 using Overview.Bff;
@@ -63,9 +64,12 @@ app.UseAuthorization();
 
 app.UseMiddleware<InternalGatewayKeyMiddleware>();
 
-app.MapGet("/overview", async (IProductApi productApi, IOrderApi orderApi) =>
+app.MapGet("/overview", async (IProductApi productApi, IOrderApi orderApi, 
+    IOptions<GatewaySecurityOptions> options) =>
 {
-    var ordersResponse = await orderApi.GetOrdersAsync();
+    var headerKey = options.Value.InternalGatewayKey;
+
+    var ordersResponse = await orderApi.GetOrdersAsync(headerKey);
     var orders = ordersResponse.Items;
 
     var productIds = orders
@@ -74,7 +78,7 @@ app.MapGet("/overview", async (IProductApi productApi, IOrderApi orderApi) =>
         .Distinct()
         .ToList();
 
-    var productsResponse = await productApi.GetProductsAsync(productIds);
+    var productsResponse = await productApi.GetProductsAsync(headerKey, productIds);
     var products = productsResponse.Items;
 
     var productsById = products.ToImmutableDictionary(p => p.Id);
