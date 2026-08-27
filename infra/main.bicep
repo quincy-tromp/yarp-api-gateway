@@ -62,19 +62,13 @@ resource productApi 'Microsoft.Web/sites@2022-09-01' = {
   properties: {
     serverFarmId: servicePlan.id
     httpsOnly: true
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: 'Enabled'
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|10.0'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
-      cors: {
-        allowedOrigins: [
-          'https://${yarpProxy.name}.azurewebsites.net'
-          'https://${overviewBff.name}.azurewebsites.net'
-        ]
-      }
-    }    
-  } 
+    }
+  }  
 }
 
 resource orderApi 'Microsoft.Web/sites@2022-09-01' = {
@@ -87,17 +81,11 @@ resource orderApi 'Microsoft.Web/sites@2022-09-01' = {
   properties: {
     serverFarmId: servicePlan.id
     httpsOnly: true
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: 'Enabled'
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|10.0'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
-      cors: {
-        allowedOrigins: [
-          'https://${yarpProxy.name}.azurewebsites.net'
-          'https://${overviewBff.name}.azurewebsites.net'
-        ]
-      }
     }
   }
 }
@@ -112,16 +100,11 @@ resource overviewBff 'Microsoft.Web/sites@2022-09-01' = {
   properties: {
     serverFarmId: servicePlan.id
     httpsOnly: true
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: 'Enabled'
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|10.0'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
-      cors: {
-        allowedOrigins: [
-          'https://${yarpProxy.name}.azurewebsites.net'
-        ]
-      }
     }
   }
 }
