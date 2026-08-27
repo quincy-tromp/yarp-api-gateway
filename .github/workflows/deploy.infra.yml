@@ -44,6 +44,7 @@ jobs:
                 JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
                 PRODUCT_API_SCOPE: ${{ secrets.PRODUCT_API_SCOPE }}
                 ORDER_API_SCOPE: ${{ secrets.ORDER_API_SCOPE }}
+                INTERNAL_GATEWAY_KEY: ${{ secrets.INTERNAL_GATEWAY_KEY }}
               with:
                   type: deployment
                   operation: create          

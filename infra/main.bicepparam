@@ -21,6 +21,6 @@ param overviewBffClientId = readEnvironmentVariable('OVERVIEW_BFF_CLIENT_ID')
 param overviewBffClientSecret = readEnvironmentVariable('OVERVIEW_BFF_CLIENT_SECRET')
 param jwtAuthority = readEnvironmentVariable('JWT_AUTHORITY')
 param jwtIssuer = readEnvironmentVariable('JWT_ISSUER')
-
 param productsApiScope = readEnvironmentVariable('PRODUCT_API_SCOPE')
 param ordersApiScope = readEnvironmentVariable('ORDER_API_SCOPE')
+param internalGatewayKey = readEnvironmentVariable('INTERNAL_GATEWAY_KEY')

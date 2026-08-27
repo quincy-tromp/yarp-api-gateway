@@ -37,6 +37,9 @@ param productsApiScope string
 @secure()
 param ordersApiScope string
 
+@secure()
+param internalGatewayKey string
+
 @description('Create the app service plan')
 resource servicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
@@ -181,6 +184,7 @@ resource productApiAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     AzureAd__ClientId: productApiClientId
     APPLICATIONINSIGHTS_CONNECTION_STRING: productInsights.properties.ConnectionString
     APPINSIGHTS_INSTRUMENTATIONKEY: productInsights.properties.InstrumentationKey
+    GatewaySecurity__InternalGatewayKey: internalGatewayKey
     
   }
 }
@@ -217,6 +221,7 @@ resource orderApiAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     AzureAd__ClientId: orderApiClientId
     APPLICATIONINSIGHTS_CONNECTION_STRING: orderInsights.properties.ConnectionString
     APPINSIGHTS_INSTRUMENTATIONKEY: orderInsights.properties.InstrumentationKey
+    GatewaySecurity__InternalGatewayKey: internalGatewayKey
   }
 }
 
@@ -257,6 +262,7 @@ resource overviewBffAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     ExternalApis__Orders__Scopes__0: ordersApiScope
     APPLICATIONINSIGHTS_CONNECTION_STRING: overviewInsights.properties.ConnectionString
     APPINSIGHTS_INSTRUMENTATIONKEY: overviewInsights.properties.InstrumentationKey
+    GatewaySecurity__InternalGatewayKey: internalGatewayKey
   }
 }
 
@@ -298,6 +304,7 @@ resource yarpAppSettings 'Microsoft.Web/sites/config@2022-03-01' = {
     ReverseProxy__Clusters__overview__Destinations__overviewbff__Address: 'https://${overviewBff.name}.azurewebsites.net'
     APPLICATIONINSIGHTS_CONNECTION_STRING: yarpInsights.properties.ConnectionString
     APPINSIGHTS_INSTRUMENTATIONKEY: yarpInsights.properties.InstrumentationKey
+    InternalGatewayKey: internalGatewayKey
   }
 }
 
