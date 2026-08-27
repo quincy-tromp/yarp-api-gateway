@@ -47,7 +47,9 @@ builder.Services.AddAuthorizationBuilder()
 
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
-    .DoCustomResponseTransformation();
+    .JsonResponseTransformation()
+    .AddInternalGatewayKey(
+        builder.Configuration.GetValue<string>("InternalGatewayKey"));
 
 builder.Services.AddRequestTimeouts();
 
@@ -65,6 +67,9 @@ builder.Services.AddOpenTelemetry()
     {
         tracing.AddSource("Yarp.ReverseProxy");
     });
+
+builder.Services.Configure<GatewaySecurityOptions>(
+    builder.Configuration.GetSection("GatewaySecurity"));
 
 var app = builder.Build();
 

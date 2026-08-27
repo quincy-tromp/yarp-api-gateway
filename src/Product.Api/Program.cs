@@ -16,12 +16,17 @@ builder.Services.AddAuthorization();
 builder.Services.AddOpenTelemetry()
     .UseAzureMonitor();
 
+builder.Services.Configure<GatewaySecurityOptions>(
+    builder.Configuration.GetSection("GatewaySecurity"));
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<InternalGatewayKeyMiddleware>();
 
 var products = new Faker<Product>()
     .RuleFor(p => p.Id, f => f.IndexFaker + 1)

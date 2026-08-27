@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.Extensions.Options;
 using Yarp.ReverseProxy.Transforms;
 
 namespace Yarp.Gateway;
@@ -9,7 +10,25 @@ public static class IReverseProxyBuilderExtensions
 {
     extension(IReverseProxyBuilder proxyBuilder)
     {
-        public IReverseProxyBuilder DoCustomResponseTransformation()
+        public IReverseProxyBuilder AddInternalGatewayKey(string? internalGatewayKey)
+        {
+            const string HeaderName = "X-Internal-Gateway-Key";
+
+            if (string.IsNullOrWhiteSpace(internalGatewayKey))
+            {
+                throw new InvalidOperationException(
+                    "InternalGatewayKey is not configured.");
+            }
+
+            return proxyBuilder.AddTransforms(async context =>
+            {
+                context.AddRequestHeaderRemove(HeaderName);
+
+                context.AddRequestHeader(HeaderName, internalGatewayKey);
+            });
+        }
+
+        public IReverseProxyBuilder JsonResponseTransformation()
         {
             return proxyBuilder.AddTransforms(async context =>
             {

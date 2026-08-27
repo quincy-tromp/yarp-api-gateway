@@ -3,6 +3,7 @@ using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web;
+using Overview.Bff;
 using Overview.Bff.Clients;
 using Overview.Bff.Models;
 using Refit;
@@ -50,12 +51,17 @@ builder.Services.AddAuthorization();
 builder.Services.AddOpenTelemetry()
     .UseAzureMonitor();
 
+builder.Services.Configure<GatewaySecurityOptions>(
+    builder.Configuration.GetSection("GatewaySecurity"));
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<InternalGatewayKeyMiddleware>();
 
 app.MapGet("/overview", async (IProductApi productApi, IOrderApi orderApi) =>
 {
