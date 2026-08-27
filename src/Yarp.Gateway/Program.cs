@@ -68,9 +68,6 @@ builder.Services.AddOpenTelemetry()
         tracing.AddSource("Yarp.ReverseProxy");
     });
 
-builder.Services.Configure<GatewaySecurityOptions>(
-    builder.Configuration.GetSection("GatewaySecurity"));
-
 var app = builder.Build();
 
 app.UseAuthentication();
