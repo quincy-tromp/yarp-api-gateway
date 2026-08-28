@@ -7,5 +7,5 @@ public interface IOrderApi
 {
     [Get("/orders")]
     Task<CollectionResponse<Order>> GetOrdersAsync(
-        [Header("X-Internal-Gateway_key")] string internalGatewayKey);
+        [Header("X-Internal-Gateway-Key")] string internalGatewayKey);
 }
